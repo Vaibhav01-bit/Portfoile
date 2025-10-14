@@ -125,6 +125,35 @@ document.addEventListener('DOMContentLoaded',function(){
     setTimeout(()=>{ fill.style.width = lvl + '%'; }, 200 + Math.random()*600);
   });
 
+  // Floating skills: assign varied durations, delays and vertical offsets for a natural motion
+  const skillBubbles = document.querySelectorAll('.skill-bubble');
+  if(skillBubbles.length){
+    skillBubbles.forEach((b,i)=>{
+      // vary duration between 5s and 9s
+      const dur = (5 + Math.random()*4).toFixed(2) + 's';
+      const delay = (Math.random()*2).toFixed(2) + 's';
+      const dir = Math.random() > 0.5 ? 'floaty-slow' : 'floaty-fast';
+      b.style.animationName = dir;
+      b.style.animationDuration = dur;
+      b.style.animationDelay = delay;
+      b.style.animationTimingFunction = 'ease-in-out';
+      b.style.animationIterationCount = 'infinite';
+
+      // small horizontal offset to break alignment
+      const x = (Math.random()*36 - 18).toFixed(1) + 'px';
+      b.style.transform = `translateX(${x})`;
+
+      // scale slightly based on data-level
+      const lvl = parseFloat(b.dataset.level || 0.8);
+      const s = 0.85 + (lvl || 0.8) * 0.35;
+      b.style.transform += ` scale(${s.toFixed(2)})`;
+
+      // reveal on scroll with a small delay
+      b.style.opacity = '0';
+      setTimeout(()=>{ b.style.transition = 'opacity 520ms ease, transform 520ms ease'; b.style.opacity = '1'; }, 120 + i*80);
+    });
+  }
+
   // skill counters (animated numbers)
   document.querySelectorAll('.skill').forEach(skill=>{
     const fill = skill.querySelector('.bar-fill');

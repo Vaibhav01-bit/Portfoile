@@ -35,8 +35,8 @@
       <div class="container hero-grid">
         <div class="hero-intro">
           <h1>Hi, I'm <span class="accent zoomInDown">Vaibhav Ingle</span></h1>
-          <p class="lead"><span id="typed" data-text="Front-End Developer &amp; Designer — I build fast, accessible, and beautiful web experiences."></span><span class="cursor" aria-hidden="true">|</span></p>
-          <p>I'm focused on clean code, good UX, and delivering high-quality products. Replace this intro with a short bio about yourself.</p>
+          <p class="lead"><span id="typed" data-text="AI Agent Enthusiast &amp; Python Developer — creating innovative, user-focused web experiences"></span><span class="cursor" aria-hidden="true">|</span></p>
+          <p>I’m a B.Tech Computer Science student with a strong interest in web development and AI-driven applications. I enjoy experimenting with emerging AI tools and integrating them into real-world solutions. With a solid foundation in Python and modern web technologies, I’m focused on creating innovative, efficient, and user-friendly digital experiences.</p>
           <div class="hero-cta">
             <a id="downloadResume" class="btn" href="#">Download Resume</a>
             <a class="btn btn-outline" href="#projects">See Projects</a>
@@ -72,30 +72,43 @@
       <div class="container">
         <h2>Skills</h2>
         <p class="muted">Technical &amp; soft skills — proficiency is illustrative. Update as needed.</p>
-        <div class="skills-grid">
-          <div class="skill">
-            <div class="skill-head"><span>HTML</span><span>90%</span></div>
-            <div class="bar"><div class="bar-fill" data-level="90"></div></div>
+        <div class="skills-float" aria-hidden="false">
+          <!-- Floating skill bubbles. Each bubble has data-skill for labels and data-level for subtle size mapping -->
+          <div class="skill-bubble" data-skill="HTML" data-level="0.9">
+            <svg viewBox="0 0 24 24" width="36" height="36" aria-hidden="true"><path fill="currentColor" d="M1.5 0l2 22L12 24l8.5-2 2-22H1.5z"></path></svg>
+            <span class="skill-name">HTML</span>
           </div>
-          <div class="skill">
-            <div class="skill-head"><span>CSS</span><span>85%</span></div>
-            <div class="bar"><div class="bar-fill" data-level="85"></div></div>
+          <div class="skill-bubble" data-skill="CSS" data-level="0.85">
+            <svg viewBox="0 0 24 24" width="36" height="36" aria-hidden="true"><path fill="currentColor" d="M12 0l-9 21 9 3 9-3L12 0z"></path></svg>
+            <span class="skill-name">CSS</span>
           </div>
-          <div class="skill">
-            <div class="skill-head"><span>JavaScript</span><span>80%</span></div>
-            <div class="bar"><div class="bar-fill" data-level="80"></div></div>
+          <div class="skill-bubble" data-skill="JavaScript" data-level="0.8">
+            <svg viewBox="0 0 24 24" width="36" height="36" aria-hidden="true"><path fill="currentColor" d="M2 2h20v20H2z"></path></svg>
+            <span class="skill-name">JavaScript</span>
           </div>
-          <div class="skill">
-            <div class="skill-head"><span>Python</span><span>70%</span></div>
-            <div class="bar"><div class="bar-fill" data-level="70"></div></div>
+          <div class="skill-bubble" data-skill="Python" data-level="0.7">
+            <svg viewBox="0 0 24 24" width="36" height="36" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="currentColor"></circle></svg>
+            <span class="skill-name">Python</span>
           </div>
-          <div class="skill soft">
-            <div class="skill-head"><span>Communication</span><span>85%</span></div>
-            <div class="bar"><div class="bar-fill" data-level="85"></div></div>
+          <div class="skill-bubble soft" data-skill="Communication" data-level="0.85">
+            <svg viewBox="0 0 24 24" width="36" height="36" aria-hidden="true"><path fill="currentColor" d="M3 3h18v12H7l-4 4V3z"></path></svg>
+            <span class="skill-name">Communication</span>
           </div>
-          <div class="skill soft">
-            <div class="skill-head"><span>Problem Solving</span><span>88%</span></div>
-            <div class="bar"><div class="bar-fill" data-level="88"></div></div>
+          <div class="skill-bubble soft" data-skill="Problem Solving" data-level="0.88">
+            <svg viewBox="0 0 24 24" width="36" height="36" aria-hidden="true"><path fill="currentColor" d="M12 2l9 6-9 6-9-6 9-6z"></path></svg>
+            <span class="skill-name">Problem Solving</span>
+          </div>
+          <div class="skill-bubble" data-skill="AWS" data-level="0.75">
+            <svg viewBox="0 0 24 24" width="36" height="36" aria-hidden="true"><path fill="currentColor" d="M2 12h20v2H2z"></path></svg>
+            <span class="skill-name">AWS</span>
+          </div>
+          <div class="skill-bubble" data-skill="C++" data-level="0.78">
+            <svg viewBox="0 0 24 24" width="36" height="36" aria-hidden="true"><path fill="currentColor" d="M4 4h16v16H4z"></path></svg>
+            <span class="skill-name">C++</span>
+          </div>
+          <div class="skill-bubble" data-skill="AI Agent" data-level="0.72">
+            <svg viewBox="0 0 24 24" width="36" height="36" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 100 20 10 10 0 000-20z"></path></svg>
+            <span class="skill-name">AI Agent</span>
           </div>
         </div>
       </div>
