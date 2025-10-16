@@ -186,6 +186,58 @@ document.addEventListener('DOMContentLoaded',function(){
   modalClose && modalClose.addEventListener('click',()=>{ modal.setAttribute('aria-hidden','true'); modalImage.src=''; });
   modal.addEventListener('click',(e)=>{ if(e.target===modal) { modal.setAttribute('aria-hidden','true'); modalImage.src=''; } });
 
+  // Certifications: filter buttons and tilt interaction
+  const certGrid = document.getElementById('certGrid');
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  if(filterBtns.length && certGrid){
+    filterBtns.forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        // update active state
+        filterBtns.forEach(b=>{ b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
+        btn.classList.add('active'); btn.setAttribute('aria-selected','true');
+        const f = btn.dataset.filter || 'all';
+        // show/hide cards
+        const cards = certGrid.querySelectorAll('.cert-card');
+        cards.forEach(c=>{
+          const cat = (c.dataset.category||'other').toLowerCase();
+          if(f === 'all' || cat === f){ c.style.display = ''; } else { c.style.display = 'none'; }
+        });
+      });
+    });
+  }
+
+  // add tilt/3D effect on pointer move for cards (delegated)
+  function attachTilt(el){
+    el.addEventListener('pointermove', (e)=>{
+      const r = el.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width - 0.5;
+      const py = (e.clientY - r.top) / r.height - 0.5;
+      const rx = py * 6; const ry = px * -10;
+      el.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg) translateZ(6px)`;
+    });
+    el.addEventListener('pointerleave', ()=>{ el.style.transform = ''; });
+  }
+  // attach tilt to future and existing cards
+  const existingCards = document.querySelectorAll('.cert-card');
+  existingCards.forEach(c=>{ attachTilt(c); c.classList.add('tilt'); });
+
+  // reveal cert cards when scrolled into view (observer-based)
+  if(certGrid){
+    const cardObs = new IntersectionObserver((entries)=>{
+      entries.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add('in-view'); cardObs.unobserve(en.target); } });
+    },{threshold:0.15});
+    certGrid.querySelectorAll('.cert-card').forEach(card=>cardObs.observe(card));
+  }
+
+  // delegate .view-cred clicks to open modal (supports buttons inside cards)
+  document.addEventListener('click', (e)=>{
+    const btn = e.target.closest && e.target.closest('.view-cred');
+    if(!btn) return;
+    e.preventDefault();
+    const card = btn.closest('.cert-card');
+    if(card && card.dataset.src){ modalImage.src = card.dataset.src; modal.setAttribute('aria-hidden','false'); }
+  });
+
   // button ripple effect
   document.querySelectorAll('.btn').forEach(btn=>{
     btn.addEventListener('click',function(e){
@@ -296,5 +348,82 @@ document.addEventListener('DOMContentLoaded',function(){
       it.addEventListener('click',()=>{ it.classList.toggle('active'); });
     });
   }
+
+  // --- Premium background: canvas particles + blob parallax ---
+  (function initBackground(){
+    const canvas = document.getElementById('bgCanvas');
+    if(!canvas || !canvas.getContext) return;
+    const ctx = canvas.getContext('2d');
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+    const DPR = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.round(width * DPR);
+    canvas.height = Math.round(height * DPR);
+    canvas.style.width = width + 'px'; canvas.style.height = height + 'px';
+    ctx.scale(DPR, DPR);
+
+    // particles
+    const particles = [];
+    const COUNT = Math.round((width * height) / 90000); // density
+    for(let i=0;i<COUNT;i++) particles.push(createParticle());
+
+    function createParticle(){
+      return {
+        x: Math.random() * width,
+        y: Math.random() * height,
+        r: 8 + Math.random() * 28,
+        vx: (Math.random()-0.5) * 0.25,
+        vy: (Math.random()-0.5) * 0.25,
+        hue: 200 + Math.random()*140,
+        alpha: 0.06 + Math.random()*0.14
+      };
+    }
+
+    let rafId = null;
+    function drawFrame(){
+      ctx.clearRect(0,0,width,height);
+      // soft background tint
+      ctx.fillStyle = 'rgba(6,10,20,0.02)'; ctx.fillRect(0,0,width,height);
+      particles.forEach(p=>{
+        p.x += p.vx; p.y += p.vy;
+        if(p.x < -50) p.x = width + 50; if(p.x > width + 50) p.x = -50;
+        if(p.y < -50) p.y = height + 50; if(p.y > height + 50) p.y = -50;
+
+        const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
+        g.addColorStop(0, `hsla(${p.hue},90%,65%,${(p.alpha*1.6).toFixed(3)})`);
+        g.addColorStop(0.45, `hsla(${p.hue},80%,55%,${(p.alpha*0.6).toFixed(3)})`);
+        g.addColorStop(1, `hsla(${p.hue},70%,40%,0)`);
+        ctx.fillStyle = g;
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill();
+      });
+    }
+    // animation loop
+    function loop(){ drawFrame(); rafId = requestAnimationFrame(loop); }
+    rafId = requestAnimationFrame(loop);
+
+    // resize handler
+    function onResize(){
+      width = window.innerWidth; height = window.innerHeight;
+      const DPR = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(width * DPR); canvas.height = Math.round(height * DPR);
+      canvas.style.width = width + 'px'; canvas.style.height = height + 'px'; ctx.setTransform(DPR,0,0,DPR,0,0);
+      // recalc particle count proportionally
+      const newCount = Math.max(6, Math.round((width * height) / 90000));
+      while(particles.length < newCount) particles.push(createParticle());
+      while(particles.length > newCount) particles.pop();
+    }
+    window.addEventListener('resize', debounce(onResize,120));
+
+    // cancel RAF on unload to prevent leaks
+    window.addEventListener('unload', ()=>{ if(rafId) cancelAnimationFrame(rafId); });
+
+    // parallax for blurred blob elements
+    const blobs = document.querySelectorAll('.bg-anim .blob');
+    let mx = 0, my = 0;
+    window.addEventListener('pointermove', e=>{ mx = (e.clientX / window.innerWidth - 0.5); my = (e.clientY / window.innerHeight - 0.5); blobs.forEach((b,i)=>{ b.style.transform = `translate3d(${mx*(40+i*6)}px, ${my*(30+i*6)}px, 0) scale(${1 + i*0.02})`; }); });
+
+    // debounce helper
+    function debounce(fn,wait){ let t; return function(){ clearTimeout(t); t = setTimeout(fn,wait); }; }
+  })();
 
 });

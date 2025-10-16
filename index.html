@@ -9,6 +9,8 @@
 </head>
 <body>
   <div id="progress" aria-hidden="true"></div>
+  <!-- Ambient background canvas (particles, subtle motion) -->
+  <canvas id="bgCanvas" class="bg-canvas" aria-hidden="true"></canvas>
   <!-- animated background blobs for subtle motion / glass depth -->
   <div class="bg-anim" aria-hidden="true">
     <span class="blob b1"></span>
@@ -116,19 +118,45 @@
 
     <section id="certs" class="section" data-animate>
       <div class="container">
-        <h2>Certifications</h2>
-        <div class="cert-grid">
-          <div class="cert-card" data-src="assets/cert-placeholder.svg">
-            <h4>Certified Web Developer</h4>
-            <p class="muted">Org: Web Institute • Issued: 2023</p>
-          </div>
-          <div class="cert-card" data-src="assets/cert-placeholder.svg">
-            <h4>Frontend Specialist</h4>
-            <p class="muted">Org: CSS Academy • Issued: 2022</p>
-          </div>
-          <div class="cert-card" data-src="assets/cert-placeholder.svg">
-            <h4>JavaScript Professional</h4>
-            <p class="muted">Org: JS Cert • Issued: 2021</p>
+        <div class="section-head">
+          <h2>Certifications</h2>
+          <p class="muted">Selected certifications and credentials — click any card to view the credential.</p>
+        </div>
+
+        <!-- Filter / category toggles -->
+        <div class="cert-filters" role="tablist" aria-label="Certificate categories">
+          <button class="filter-btn active" data-filter="all" role="tab" aria-selected="true">All</button>
+          <button class="filter-btn" data-filter="ai" role="tab">AI</button>
+          <button class="filter-btn" data-filter="web" role="tab">Web Dev</button>
+          <button class="filter-btn" data-filter="python" role="tab">Python</button>
+          <button class="filter-btn" data-filter="other" role="tab">Other</button>
+        </div>
+
+        <!-- Cards container: grid on desktop, horizontal scroll on small screens -->
+        <div class="certs-wrap">
+          <div class="cert-grid" id="certGrid" aria-live="polite">
+            <!-- Certificate cards should be inserted here. Example card structure (kept as comment):
+              <div class="cert-card" data-src="assets/certs/your-cert.pdf" data-category="web">
+                <div class="cert-badge">🏅</div>
+                <div class="cert-body">
+                  <h4 class="cert-title">Certificate Title</h4>
+                  <div class="cert-meta">Issuer • 2024</div>
+                </div>
+                <div class="cert-actions">
+                  <a class="btn btn-outline view-cred" href="#" role="button">View Credential</a>
+                </div>
+              </div>
+            -->
+            <div class="cert-card" data-src="cert/Solutions Architecture Job Simulation.png" data-category="other" tabindex="0">
+              <div class="cert-badge">🏅</div>
+              <div class="cert-body">
+                <h4 class="cert-title">Solutions Architecture Job Simulation</h4>
+                <div class="cert-meta">Issued credential — image preview available</div>
+              </div>
+              <div class="cert-actions">
+                <a class="btn btn-outline view-cred" href="#" role="button">View Credential</a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
