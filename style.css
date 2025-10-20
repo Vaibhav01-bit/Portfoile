@@ -24,7 +24,37 @@ body{
   -webkit-font-smoothing:antialiased;
   -moz-osx-font-smoothing:grayscale;
   line-height:1.5;
+  position:relative;
 }
+body::before{
+  content:'';
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  height:120px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,56.5c0,0,298.666,0,399.333,0C448.336,56.5,513.994,46,597,46c77.327,0,135,10.5,200.999,10.5c95.996,0,402.001,0,402.001,0' fill='%233a86ff1a'/%3E%3Cpath d='M0,66.5c0,0,298.666,0,399.333,0C448.336,66.5,513.994,56,597,56c77.327,0,135,10.5,200.999,10.5c95.996,0,402.001,0,402.001,0' fill='%23ffd1660f'/%3E%3C/svg%3E");
+  background-size: cover;
+  background-position: 0 bottom;
+  background-repeat: repeat-x;
+  pointer-events:none;
+  z-index:-1;
+  animation: wave 20s linear infinite;
+}
+body::after{
+  content:'';
+  position:fixed;
+  width:4px;
+  height:4px;
+  background:var(--accent);
+  border-radius:50%;
+  pointer-events:none;
+  z-index:-1;
+  animation:sparkle 5s linear infinite;
+  right:30%;bottom:40%;animation-delay:2s;
+}
+@keyframes sparkle{0%,100%{opacity:0;transform:scale(0) translateY(0)}50%{opacity:1;transform:scale(1.5) translateY(-10px)}}
+@keyframes wave{0%{background-position:0 bottom}100%{background-position:2400px bottom}}
 
 /* animated background blobs */
 .bg-anim{position:fixed;inset:0;pointer-events:none;z-index:-1;overflow:hidden}
@@ -34,14 +64,18 @@ body{
 .b1{width:350px;height:350px;left:5%;top:5%;background:linear-gradient(120deg,var(--accent-2),#43e97b 80%);animation:blob1 12s ease-in-out infinite}
 .b2{width:280px;height:280px;right:5%;top:20%;background:linear-gradient(90deg,#ffd166,var(--accent-3));animation:blob2 14s ease-in-out infinite}
 .b3{width:240px;height:240px;left:10%;bottom:10%;background:linear-gradient(90deg,#43e97b,#3a86ff);animation:blob3 18s ease-in-out infinite}
+.b4{width:200px;height:200px;right:15%;bottom:20%;background:linear-gradient(45deg,var(--accent-3),var(--accent-4));animation:blob4 16s ease-in-out infinite}
 @keyframes blob1{0%{transform:translateY(0) rotate(0deg) scale(1)}50%{transform:translateY(40px) rotate(12deg) scale(1.06)}100%{transform:translateY(0) rotate(0deg) scale(1)}}
 @keyframes blob2{0%{transform:translateY(0) rotate(0deg) scale(1)}50%{transform:translateY(-30px) rotate(-8deg) scale(1.04)}100%{transform:translateY(0) rotate(0deg) scale(1)}}
 @keyframes blob3{0%{transform:translateY(0) rotate(0deg) scale(1)}50%{transform:translateY(22px) rotate(6deg) scale(1.03)}100%{transform:translateY(0) rotate(0deg) scale(1)}}
+@keyframes blob4{0%{transform:translateX(0) rotate(0deg) scale(1)}50%{transform:translateX(-25px) rotate(-10deg) scale(1.05)}100%{transform:translateX(0) rotate(0deg) scale(1)}}
 
 /* animated radial gradient overlay for premium depth */
 .bg-radial{position:fixed;inset:0;pointer-events:none;z-index:5;mix-blend-mode:screen;opacity:0.28}
-.bg-radial:before{content:'';position:absolute;inset:-20%;background:radial-gradient(closest-side at 20% 10%, rgba(58,134,255,0.12), transparent 20%),radial-gradient(closest-side at 80% 90%, rgba(255,209,102,0.08), transparent 18%);filter:blur(40px);animation:radialPulse 10s ease-in-out infinite}
+.bg-radial:before{content:'';position:absolute;inset:-20%;background:radial-gradient(closest-side at 20% 10%, rgba(58,134,255,0.12), transparent 20%),radial-gradient(closest-side at 80% 90%, rgba(255,209,102,0.08), transparent 18%),radial-gradient(closest-side at 50% 50%, rgba(255,107,107,0.06), transparent 30%);filter:blur(40px);animation:radialPulse 10s ease-in-out infinite}
+.bg-radial:after{content:'';position:absolute;inset:0;background:linear-gradient(45deg,transparent,rgba(255,209,102,0.03),transparent);animation:shimmer 8s linear infinite}
 @keyframes radialPulse{0%,100%{transform:scale(1);opacity:0.9}50%{transform:scale(1.06);opacity:1}}
+@keyframes shimmer{0%{transform:translateX(-100%) skewX(-15deg)}100%{transform:translateX(100%) skewX(-15deg)}}
 
 /* lifted glass effect for cards and panels */
 .glass{background:linear-gradient(120deg,rgba(255,255,255,0.08),rgba(255,255,255,0.01));box-shadow:0 10px 40px rgba(58,134,255,0.18),0 2px 8px rgba(255,209,102,0.08);border:1px solid rgba(255,255,255,0.09);backdrop-filter:blur(12px);}

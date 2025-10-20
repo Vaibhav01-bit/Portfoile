@@ -422,6 +422,84 @@ document.addEventListener('DOMContentLoaded',function(){
     let mx = 0, my = 0;
     window.addEventListener('pointermove', e=>{ mx = (e.clientX / window.innerWidth - 0.5); my = (e.clientY / window.innerHeight - 0.5); blobs.forEach((b,i)=>{ b.style.transform = `translate3d(${mx*(40+i*6)}px, ${my*(30+i*6)}px, 0) scale(${1 + i*0.02})`; }); });
 
+    // interactive particles: mouse attraction and click effects
+    let mouseX = width / 2, mouseY = height / 2;
+    window.addEventListener('pointermove', e => { mouseX = e.clientX; mouseY = e.clientY; });
+
+    // click to spawn ripple effect
+    const ripples = [];
+    window.addEventListener('click', e => {
+      ripples.push({ x: e.clientX, y: e.clientY, r: 0, maxR: 200, alpha: 0.3 });
+    });
+
+    function updateParticles() {
+      particles.forEach(p => {
+        // subtle mouse attraction
+        const dx = mouseX - p.x;
+        const dy = mouseY - p.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist > 0) {
+          const force = Math.min(0.5, 50 / dist);
+          p.vx += (dx / dist) * force * 0.01;
+          p.vy += (dy / dist) * force * 0.01;
+        }
+        // dampen velocity
+        p.vx *= 0.98;
+        p.vy *= 0.98;
+        // update position
+        p.x += p.vx;
+        p.y += p.vy;
+        // wrap around
+        if (p.x < -50) p.x = width + 50;
+        if (p.x > width + 50) p.x = -50;
+        if (p.y < -50) p.y = height + 50;
+        if (p.y > height + 50) p.y = -50;
+      });
+
+      // update ripples
+      ripples.forEach((rip, i) => {
+        rip.r += 4;
+        rip.alpha -= 0.01;
+        if (rip.alpha <= 0 || rip.r >= rip.maxR) ripples.splice(i, 1);
+      });
+    }
+
+    function drawFrame() {
+      ctx.clearRect(0, 0, width, height);
+      // soft background tint
+      ctx.fillStyle = 'rgba(6,10,20,0.02)';
+      ctx.fillRect(0, 0, width, height);
+
+      // draw ripples
+      ripples.forEach(rip => {
+        ctx.strokeStyle = `rgba(58,134,255,${rip.alpha})`;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(rip.x, rip.y, rip.r, 0, Math.PI * 2);
+        ctx.stroke();
+      });
+
+      // draw particles
+      particles.forEach(p => {
+        const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
+        g.addColorStop(0, `hsla(${p.hue},90%,65%,${(p.alpha * 1.6).toFixed(3)})`);
+        g.addColorStop(0.45, `hsla(${p.hue},80%,55%,${(p.alpha * 0.6).toFixed(3)})`);
+        g.addColorStop(1, `hsla(${p.hue},70%,40%,0)`);
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    }
+
+    // animation loop with updates
+    function loop() {
+      updateParticles();
+      drawFrame();
+      rafId = requestAnimationFrame(loop);
+    }
+    rafId = requestAnimationFrame(loop);
+
     // debounce helper
     function debounce(fn,wait){ let t; return function(){ clearTimeout(t); t = setTimeout(fn,wait); }; }
   })();
