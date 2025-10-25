@@ -159,10 +159,13 @@ body::after{
 .resume-cards .card{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);padding:1rem;border-radius:8px;margin-bottom:1rem}
 .card.small{font-size:0.95rem}
 
-/* Summary section layout */
-.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:0.8rem}
-.summary-list{margin:0.6rem 0 0 0;padding-left:1.1rem}
-.summary-list li{margin-bottom:0.45rem}
+/* About Me section layout */
+.about-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin-top:1rem}
+.about-card{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);padding:1.5rem;border-radius:12px;border:1px solid rgba(255,255,255,0.04);box-shadow:0 10px 30px rgba(2,6,12,0.45);transition:transform 220ms ease,box-shadow 220ms ease;text-align:center}
+.about-card:hover{transform:translateY(-8px);box-shadow:0 20px 50px rgba(2,6,12,0.6)}
+.about-icon{margin-bottom:1rem;display:inline-flex;align-items:center;justify-content:center;width:64px;height:64px;border-radius:50%;background:linear-gradient(90deg,var(--accent-2),var(--accent));color:#071026;box-shadow:0 8px 24px rgba(123,140,255,0.12)}
+.about-card h3{margin:0 0 0.5rem 0;font-size:1.1rem;color:var(--accent)}
+.about-card p{margin:0;color:var(--muted);line-height:1.5}
 
 /* Timeline / Experience styles */
 .timeline{position:relative;margin-top:1rem;padding-left:22px;max-width:100%;overflow:hidden}
@@ -200,19 +203,48 @@ body::after{
 
 /* Floating skills UI */
 .skills-float{position:relative;display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;padding:2.2rem 1rem;min-height:240px;max-width:100%}
-.skill-bubble{--size:84px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.45rem;width:var(--size);height:var(--size);border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);box-shadow:0 8px 30px rgba(2,6,12,0.6);color:var(--text);transition:transform 320ms ease,box-shadow 320ms ease}
-.skill-bubble svg{width:36px;height:36px;color:var(--accent-2);transition:transform 320ms ease}
-.skill-bubble .skill-name{font-size:0.85rem;text-align:center;color:var(--muted);opacity:0.95}
-.skill-bubble.soft{background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent)}
+.skill-bubble{--size:84px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.45rem;width:var(--size);height:var(--size);border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);box-shadow:0 8px 30px rgba(2,6,12,0.6);color:var(--text);transition:transform 320ms ease,box-shadow 320ms ease;position:relative;overflow:hidden}
+.skill-bubble svg{width:36px;height:36px;color:var(--accent-2);transition:transform 320ms ease;z-index:2;position:relative}
+.skill-bubble .skill-name{font-size:0.85rem;text-align:center;color:var(--muted);opacity:0.95;z-index:2;position:relative}
+
+/* Proficiency ring around icon */
+.proficiency-ring{position:absolute;top:8px;left:8px;width:calc(100% - 16px);height:calc(100% - 16px);border-radius:50%;background:conic-gradient(var(--accent) calc(var(--level) * 360deg), rgba(255,255,255,0.1) calc(var(--level) * 360deg));mask:radial-gradient(farthest-side, transparent calc(50% - 2px), black calc(50% - 1px));-webkit-mask:radial-gradient(farthest-side, transparent calc(50% - 2px), black calc(50% - 1px));z-index:1;opacity:0.8}
+
+/* Category-based backgrounds */
+.skill-bubble[data-category="tech"]{background:linear-gradient(135deg, rgba(58,134,255,0.15), rgba(96,165,250,0.08))}
+.skill-bubble[data-category="soft"]{background:linear-gradient(135deg, rgba(67,217,173,0.15), rgba(125,227,201,0.08))}
 
 /* Floating keyframes — subtle up/down motion */
 @keyframes floaty-slow{0%{transform:translateY(0)}50%{transform:translateY(-12px)}100%{transform:translateY(0)}}
 @keyframes floaty-fast{0%{transform:translateY(0)}50%{transform:translateY(-18px)}100%{transform:translateY(0)}}
+@keyframes floaty-medium{0%{transform:translateY(0)}50%{transform:translateY(-15px)}100%{transform:translateY(0)}}
 
-/* Assign animation via JS for variety; fallback here */
-.skill-bubble{animation:floaty-slow 6s ease-in-out infinite}
-.skill-bubble:hover{transform:translateY(-6px) scale(1.04);box-shadow:0 18px 40px rgba(2,6,12,0.6)}
-.skill-bubble:hover svg{transform:scale(1.08)}
+/* Vary animations per bubble */
+.skill-bubble:nth-child(odd){animation:floaty-slow 6s ease-in-out infinite}
+.skill-bubble:nth-child(even){animation:floaty-medium 7s ease-in-out infinite}
+.skill-bubble:nth-child(3n){animation:floaty-fast 5s ease-in-out infinite}
+
+/* Staggered entrance animation */
+.skill-bubble{opacity:0;transform:translateY(20px) scale(0.9);animation:skillEnter 600ms ease forwards}
+.skill-bubble:nth-child(1){animation-delay:0.1s}
+.skill-bubble:nth-child(2){animation-delay:0.2s}
+.skill-bubble:nth-child(3){animation-delay:0.3s}
+.skill-bubble:nth-child(4){animation-delay:0.4s}
+.skill-bubble:nth-child(5){animation-delay:0.5s}
+.skill-bubble:nth-child(6){animation-delay:0.6s}
+.skill-bubble:nth-child(7){animation-delay:0.7s}
+.skill-bubble:nth-child(8){animation-delay:0.8s}
+.skill-bubble:nth-child(9){animation-delay:0.9s}
+@keyframes skillEnter{to{opacity:1;transform:translateY(0) scale(1)}}
+
+/* Enhanced hover effects */
+.skill-bubble:hover{transform:translateY(-8px) scale(1.06);box-shadow:0 20px 50px rgba(58,134,255,0.3), 0 0 20px rgba(255,209,102,0.2);filter:brightness(1.05)}
+.skill-bubble:hover svg{transform:scale(1.12)}
+.skill-bubble:hover .proficiency-ring{opacity:1;transform:scale(1.05)}
+
+/* Tooltip on hover */
+.skill-bubble::after{content:attr(data-skill) ' (' attr(data-level) ')';position:absolute;bottom:-40px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.8);color:#fff;padding:4px 8px;border-radius:4px;font-size:0.8rem;opacity:0;pointer-events:none;transition:opacity 200ms ease;z-index:10}
+.skill-bubble:hover::after{opacity:1}
 
 /* scale bubbles by data-level (will be refined by JS) */
 .skill-bubble[data-level]{transform-origin:center}

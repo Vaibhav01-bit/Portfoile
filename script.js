@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded',function(){
       const childObs = new IntersectionObserver(entries=>{
         entries.forEach(en=>{
           if(en.isIntersecting){
-            const children = section.querySelectorAll('.card, .project-card, .cert-card, .skill');
+            const children = section.querySelectorAll('.card, .project-card, .cert-card, .skill, .about-card');
             children.forEach((c,i)=>{ c.style.transitionDelay = (i*80)+'ms'; c.classList.add('in-view'); });
           }
         });
